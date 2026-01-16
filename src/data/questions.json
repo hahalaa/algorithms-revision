@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "topic": "Greedy Algorithms",
+    "difficulty": "Easy",
+    "question": "Given a set of intervals $I = \\{(s_1, f_1), (s_2, f_2), ..., (s_n, f_n)\\}$, find the maximum number of mutually compatible intervals. Describe the greedy choice property.",
+    "solution": "Sort the intervals by their finish times $f_i$ in non-decreasing order. Always select the interval with the earliest finish time that is compatible with the previously selected intervals. \n\n**Time Complexity:** $O(n \\log n)$ due to sorting."
+  },
+  {
+    "id": 2,
+    "topic": "Dynamic Programming",
+    "difficulty": "Medium",
+    "question": "Define the recurrence relation for the **Longest Common Subsequence** problem for two sequences $X$ and $Y$.",
+    "solution": "Let $c[i, j]$ be the length of the LCS of sequences $X_i$ and $Y_j$. \n\n$$c[i, j] = \\begin{cases} 0 & \\text{if } i=0 \\text{ or } j=0 \\\\ c[i-1, j-1] + 1 & \\text{if } i,j > 0 \\text{ and } x_i = y_j \\\\ \\max(c[i, j-1], c[i-1, j]) & \\text{if } i,j > 0 \\text{ and } x_i \\neq y_j \\end{cases}$$"
+  }
+]
