@@ -12,5 +12,26 @@
     "difficulty": "Medium",
     "question": "Define the recurrence relation for the **Longest Common Subsequence** problem for two sequences $X$ and $Y$.",
     "solution": "Let $c[i, j]$ be the length of the LCS of sequences $X_i$ and $Y_j$. \n\n$$c[i, j] = \\begin{cases} 0 & \\text{if } i=0 \\text{ or } j=0 \\\\ c[i-1, j-1] + 1 & \\text{if } i,j > 0 \\text{ and } x_i = y_j \\\\ \\max(c[i, j-1], c[i-1, j]) & \\text{if } i,j > 0 \\text{ and } x_i \\neq y_j \\end{cases}$$"
+  },
+  {
+    "id": 3,
+    "topic": "Divide and Conquer",
+    "difficulty": "Easy",
+    "question": "What is the Master Theorem case for the recurrence $T(n) = 2T(n/2) + n$?",
+    "solution": "Here $a=2, b=2, f(n)=n$. \nWe compare $n^{\\log_b a} = n^{\\log_2 2} = n^1$ with $f(n) = n$. \nSince they are equal, this is Case 2 of the Master Theorem. \n\n$$T(n) = \\Theta(n \\log n)$$"
+  },
+  {
+    "id": 4,
+    "topic": "Flow Networks",
+    "difficulty": "Hard",
+    "question": "Explain the Max-Flow Min-Cut theorem.",
+    "solution": "The maximum amount of flow possible from source $s$ to sink $t$ in a flow network is equal to the capacity of a minimum cut $(S, T)$ in that network. \n\nMathematically: $|f| = c(S, T)$ where $(S, T)$ is a cut with minimum capacity."
+  },
+  {
+    "id": 5,
+    "topic": "Greedy Algorithms",
+    "difficulty": "Medium",
+    "question": "Does the Greedy approach work for the 0/1 Knapsack problem? Why or why not?",
+    "solution": "No, the Greedy approach does **not** work for 0/1 Knapsack. \nChoosing the item with the highest value-to-weight ratio can lead to empty space in the knapsack that could have been filled by a combination of other items yielding a higher total value. \n\nDynamic Programming is required."
   }
 ]
