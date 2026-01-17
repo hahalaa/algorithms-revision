@@ -1,98 +1,98 @@
 import React, { useState } from 'react';
 
 const ControlPanel = ({ onGenerate, availableTopics }) => {
-  // Local state for the form
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [questionCount, setQuestionCount] = useState(3);
   const [difficulty, setDifficulty] = useState('Any');
 
-  // Handle checkbox toggles
   const handleTopicChange = (topic) => {
-    setSelectedTopics(prev => {
-      if (prev.includes(topic)) {
-        return prev.filter(t => t !== topic);
-      } else {
-        return [...prev, topic];
-      }
-    });
+    setSelectedTopics(prev => 
+      prev.includes(topic) ? prev.filter(t => t !== topic) : [...prev, topic]
+    );
   };
 
-  // Handle the "Generate" click
   const handleSubmit = () => {
-    if (selectedTopics.length === 0) {
-      alert("Please select at least one topic.");
-      return;
-    }
-    // Pass the user choices up to the parent App
-    onGenerate({
-      topics: selectedTopics,
-      count: questionCount,
-      difficulty
-    });
+    if (selectedTopics.length === 0) return alert("Select at least one topic.");
+    onGenerate({ topics: selectedTopics, count: questionCount, difficulty });
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-8">
-      <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-        <span className="mr-2">⚙️</span> Configuration
-      </h2>
+    <div className="border-t border-b border-gray-200 py-8 mb-12">
+      <div className="flex flex-col md:flex-row gap-12">
+        
+        {/* Left Col: Topics */}
+        <div className="flex-1">
+          <h2 className="font-sans text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">
+            Select Topics
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {availableTopics.map((topic) => {
+              const isSelected = selectedTopics.includes(topic);
+              return (
+                <button
+                  key={topic}
+                  onClick={() => handleTopicChange(topic)}
+                  className={`
+                    px-3 py-1.5 text-sm font-sans transition-all duration-200 border
+                    ${isSelected 
+                      ? 'bg-black text-white border-black' 
+                      : 'bg-transparent text-gray-600 border-gray-300 hover:border-black hover:text-black'
+                    }
+                  `}
+                >
+                  {topic}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-      {/* Topics Selection */}
-      <div className="mb-6">
-        <label className="block text-sm font-bold text-gray-700 mb-2">Select Topics:</label>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {availableTopics.map((topic) => (
-            <label key={topic} className="flex items-center space-x-2 cursor-pointer p-2 rounded hover:bg-gray-50 border border-transparent hover:border-gray-200">
-              <input
-                type="checkbox"
-                value={topic}
-                checked={selectedTopics.includes(topic)}
-                onChange={() => handleTopicChange(topic)}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <span className="text-gray-700">{topic}</span>
+        {/* Right Col: Settings */}
+        <div className="flex-1 md:max-w-xs space-y-6">
+          
+          {/* Difficulty Dropdown */}
+          <div>
+            <label className="block font-sans text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+              Difficulty
             </label>
-          ))}
-        </div>
-      </div>
+            <select
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+              className="w-full bg-transparent font-serif text-lg py-2 border-b border-gray-300 focus:border-black outline-none appearance-none rounded-none cursor-pointer hover:border-gray-400 transition"
+              style={{ backgroundImage: 'none' }} // Removes default arrow for cleaner look
+            >
+              <option value="Any">Mixed / Any</option>
+              <option value="Easy">Easy</option>
+              <option value="Medium">Medium</option>
+              <option value="Hard">Hard</option>
+            </select>
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        {/* Difficulty Selection */}
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Difficulty:</label>
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+          {/* Count Input */}
+          <div>
+            <label className="block font-sans text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">
+              Question Count
+            </label>
+            <input
+              type="number"
+              min="1"
+              max="10"
+              value={questionCount}
+              onChange={(e) => setQuestionCount(parseInt(e.target.value) || 1)}
+              className="w-full bg-transparent font-serif text-lg py-2 border-b border-gray-300 focus:border-black outline-none rounded-none transition"
+            />
+          </div>
+
+          {/* Generate Button */}
+          <button
+            onClick={handleSubmit}
+            className="w-full bg-black text-white font-sans font-medium text-sm tracking-wide uppercase py-4 hover:bg-gray-800 transition active:scale-[0.99]"
           >
-            <option value="Any">Mixed / Any</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
-        </div>
+            Generate Worksheet
+          </button>
 
-        {/* Question Count */}
-        <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Number of Questions:</label>
-          <input
-            type="number"
-            min="1"
-            max="10"
-            value={questionCount}
-            onChange={(e) => setQuestionCount(parseInt(e.target.value) || 1)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
         </div>
       </div>
-
-      {/* Action Button */}
-      <button
-        onClick={handleSubmit}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 ease-in-out transform hover:scale-[1.01] shadow-md"
-      >
-        Generate Questions
-      </button>
     </div>
   );
 };

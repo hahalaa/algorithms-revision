@@ -7,68 +7,57 @@ function App() {
   const [generatedQuestions, setGeneratedQuestions] = useState([]);
   const [hasGenerated, setHasGenerated] = useState(false);
 
-  // Extract unique topics from the data source dynamically
   const availableTopics = [...new Set(questionsData.map(q => q.topic))];
 
   const handleGenerate = ({ topics, count, difficulty }) => {
-    // 1. Filter by Topic
     let filtered = questionsData.filter(q => topics.includes(q.topic));
-
-    // 2. Filter by Difficulty (if not 'Any')
     if (difficulty !== 'Any') {
       filtered = filtered.filter(q => q.difficulty === difficulty);
     }
-
-    // 3. Randomize (Fisher-Yates Shuffle)
-    for (let i = filtered.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
-    }
-
-    // 4. Slice to the requested count
-    const selected = filtered.slice(0, count);
-
-    setGeneratedQuestions(selected);
+    // Simple shuffle
+    filtered.sort(() => Math.random() - 0.5);
+    setGeneratedQuestions(filtered.slice(0, count));
     setHasGenerated(true);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-900 pb-12">
-      {/* Navbar / Header */}
-      <header className="bg-blue-900 text-white py-6 shadow-lg mb-8">
-        <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-3xl font-bold tracking-tight">COMP3121 Revision</h1>
-          <p className="text-blue-200 mt-2 text-sm">Unofficial Algorithm Practice Tool</p>
+    <div className="min-h-screen bg-[#fcfcfc] text-gray-900 font-serif selection:bg-gray-200">
+      
+      {/* Minimal Header */}
+      <header className="border-b border-gray-200 py-8 mb-10">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h1 className="text-4xl font-semibold tracking-tight text-black mb-2">
+            Algorithm Revision
+          </h1>
+          <p className="text-gray-500 italic font-serif text-lg">
+            UNSW COMP3121 / COMP3821
+          </p>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4">
+      <main className="max-w-4xl mx-auto px-6 pb-20">
         
-        {/* Control Panel */}
         <ControlPanel 
           onGenerate={handleGenerate} 
           availableTopics={availableTopics} 
         />
 
-        {/* Results Area */}
-        <div className="mt-8">
+        <div className="mt-20 space-y-20">
           {hasGenerated && generatedQuestions.length === 0 ? (
-            <div className="text-center p-8 bg-white rounded-lg border border-gray-200 text-gray-500">
-              <p className="text-lg">No questions found matching those criteria.</p>
-              <p className="text-sm mt-2">Try selecting "Any" difficulty or different topics.</p>
+            <div className="text-center py-12 border-t border-b border-gray-100">
+              <p className="text-xl text-gray-400 italic">No questions found matching criteria.</p>
             </div>
           ) : (
-            generatedQuestions.map((q) => (
-              <QuestionCard key={q.id} questionData={q} />
+            generatedQuestions.map((q, index) => (
+              <React.Fragment key={q.id}>
+                {/* Add a separator line between questions */}
+                {index > 0 && <hr className="border-gray-200 my-12" />}
+                <QuestionCard questionData={q} index={index + 1} />
+              </React.Fragment>
             ))
           )}
         </div>
       </main>
-      
-      {/* Footer */}
-      <footer className="text-center text-gray-400 text-xs py-8">
-        <p>Built for UNSW COMP3121/3821 Revision. Not officially affiliated with UNSW.</p>
-      </footer>
     </div>
   );
 }
